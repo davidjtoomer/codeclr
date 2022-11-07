@@ -229,7 +229,7 @@ def load_file(file_name):
     casses = []
     with open(file_name) as f:
         for line in f:
-            cass, _ = deserialize(line)
+            cass = deserialize(line)
             if cass is not None:
                 casses.append(cass)
     return casses
@@ -237,10 +237,7 @@ def load_file(file_name):
 
 def deserialize(s):
     tokens = s.strip().split('\t')
-    src_range = tuple(map(int, tokens[0].split(',')))
-    assert len(src_range) == 4
-    cass = deserialize_from_tokens(tokens[1:])
-    return cass, src_range
+    return deserialize_from_tokens(tokens)
 
 
 def deserialize_from_tokens(tokens):
