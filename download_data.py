@@ -12,9 +12,9 @@ logging.basicConfig(format='[%(asctime)s] %(pathname)s:%(lineno)d %(levelname)s 
 logger = logging.getLogger(__name__)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--benchmark', type=int, default=1000, nargs='+', choices=[1000, 1400], help='The benchmark number.')
+parser.add_argument('--benchmark', type=int, default=[1000], nargs='+', choices=[1000, 1400], help='The benchmark number.')
 parser.add_argument('--data_dir', type=str, default='data', help='The directory in which to download the data.')
-parser.add_argument('--data_type', type=str, default='code', nargs='+', choices=['code', 'spts', 'cass'], help='The type of data to download. SPT = simplified parse tree, CASS = context-aware semantics structure.')
+parser.add_argument('--data_type', type=str, default=['code'], nargs='+', choices=['code', 'spts', 'cass'], help='The type of data to download. SPT = simplified parse tree, CASS = context-aware semantics structure.')
 args = parser.parse_args()
 
 # Create or clear the data directory
