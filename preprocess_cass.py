@@ -38,12 +38,11 @@ for benchmark in args.benchmark:
                 for gvar_mode in args.gvar_mode:
                     for fsig_mode in args.fsig_mode:
                         config = CassConfig(annot_mode=annot_mode, compound_mode=compound_mode, gfun_mode=gfun_mode, gvar_mode=gvar_mode, fsig_mode=fsig_mode)
-                        tag = f'annot_mode={annot_mode}_compound_mode={compound_mode}_gfun_mode={gfun_mode}_gvar_mode={gvar_mode}_fsig_mode={fsig_mode}'
 
-                        logger.info(f'Preprocessing {benchmark} with {tag}...')
+                        logger.info(f'Preprocessing {benchmark} with {config.tag}...')
                         for directory in tqdm.tqdm(os.listdir(DATA_DIR), leave=False):
                             if os.path.isdir(os.path.join(DATA_DIR, directory)):
-                                OUTPUT_DIR = os.path.join(args.output_dir, DIRECTORY_NAME, tag, directory)
+                                OUTPUT_DIR = os.path.join(args.output_dir, DIRECTORY_NAME, config.tag, directory)
                                 os.makedirs(OUTPUT_DIR, exist_ok=True)
                                 for filename in os.listdir(os.path.join(DATA_DIR, directory)):
                                     if filename.endswith('.cas'):
