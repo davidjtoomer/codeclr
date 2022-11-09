@@ -32,8 +32,7 @@ class NodeType(Enum):
     LocalVar = 6,
     LocalFun = 7,
     FunSig = 8,
-    Error = 9,
-    Mask = 10
+    Error = 9
 
 
 class CassNode:
