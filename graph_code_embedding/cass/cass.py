@@ -18,8 +18,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
 from enum import Enum
-
-from .config import cass_config as config
+from typing import List
 
 
 class NodeType(Enum):
@@ -35,14 +34,24 @@ class NodeType(Enum):
     Error = 9
 
 
+class CassConfig:
+    def __init__(self, annot_mode: int = 0, compound_mode: int = 0, gvar_mode: int = 0, gfun_mode: int = 0, fsig_mode: int = 0):
+        self.annot_mode = annot_mode
+        self.compound_mode = compound_mode
+        self.gfun_mode = gfun_mode
+        self.gvar_mode = gvar_mode
+        self.fsig_mode = fsig_mode
+
+
 class CassNode:
-    def __init__(self, node_type, label='', children=[]):
+    def __init__(self, node_type: NodeType, label: str = '', children: List = [], config: CassConfig = None):
         self.node_type = node_type
         self.children = children
         self.prev_use = None
         self.next_use = None
         self.parent = None
         self.child_id = 0
+        self.config = CassConfig() if not config else config
 
         self.removed = False
 
@@ -51,7 +60,7 @@ class CassNode:
             self.n = label
 
         elif node_type == NodeType.FunSig:
-            if config.fsig_mode == 0:
+            if self.config.fsig_mode == 0:
                 self.n = None
             else:
                 self.n = label
@@ -65,20 +74,20 @@ class CassNode:
             self.label = label[p:]
 
             if self.annot == '#compound_statement#':
-                if config.compound_mode == 0:
+                if self.config.compound_mode == 0:
                     pass
-                elif config.compound_mode == 1:
+                elif self.config.compound_mode == 1:
                     self.removed = True
-                elif config.compound_mode == 2:
+                elif self.config.compound_mode == 2:
                     self.label = '{#}'
                 else:
                     raise Exception()
 
-            if config.annot_mode == 0:
+            if self.config.annot_mode == 0:
                 self.n = self.label
-            elif config.annot_mode == 1:
+            elif self.config.annot_mode == 1:
                 self.n = self.annot + self.label
-            elif config.annot_mode == 2:
+            elif self.config.annot_mode == 2:
                 if self.annot == '#parenthesized_expression#' or self.annot == '#argument_list#':
                     self.n = self.annot + self.label
                 else:
@@ -91,28 +100,28 @@ class CassNode:
                 self.n = '$VAR'
 
             elif node_type == NodeType.GlobalVar:
-                if config.gvar_mode == 0:
+                if self.config.gvar_mode == 0:
                     self.n = label
-                elif config.gvar_mode == 1:
+                elif self.config.gvar_mode == 1:
                     self.n = label
                     self.removed = True
-                elif config.gvar_mode == 2:
+                elif self.config.gvar_mode == 2:
                     self.n = '$GVAR'
-                elif config.gvar_mode == 3:
+                elif self.config.gvar_mode == 3:
                     self.n = '$VAR'
                 else:
                     raise Exception()
 
             elif node_type == NodeType.GlobalFun:
-                if config.gfun_mode == 0:
+                if self.config.gfun_mode == 0:
                     self.n = label
-                elif config.gfun_mode == 1:
+                elif self.config.gfun_mode == 1:
                     self.n = label
                     self.removed = True
-                elif config.gfun_mode == 2:
+                elif self.config.gfun_mode == 2:
                     self.n = '$GFUN'
-                elif config.gfun_mode == 3:
-                    if config.gvar_mode == 3:
+                elif self.config.gfun_mode == 3:
+                    if self.config.gvar_mode == 3:
                         self.n = '$VAR'
                     else:
                         self.n = '$GVAR'
@@ -123,6 +132,9 @@ class CassNode:
                 self.n = label
 
         self.features = []
+
+    def set_id(self, id: int):
+        self.id = id
 
 
 class CassTree:
@@ -218,134 +230,7 @@ class CassTree:
         for n in self.leaf_nodes:
             features += n.features
 
-        if config.fsig_mode == 1 and self.fun_sig_node is not None:
+        if self.config.fsig_mode == 1 and self.fun_sig_node is not None:
             features.append(self.fun_sig_node.n)
 
         return features
-
-
-def load_file(file_name):
-    casses = []
-    with open(file_name) as f:
-        for line in f:
-            cass = deserialize(line)
-            if cass is not None:
-                casses.append(cass)
-    return casses
-
-
-def deserialize(s):
-    tokens = s.strip().split('\t')
-    return deserialize_from_tokens(tokens)
-
-
-def deserialize_from_tokens(tokens):
-    num_tokens = len(tokens)
-    if num_tokens == 0:
-        return None
-
-    num_nodes = int(tokens[0])
-
-    nodes = []
-    leaf_nodes = []
-
-    i = 1
-
-    has_fun_sig = False
-    if tokens[i][0] == 'S':
-        has_fun_sig = True
-        fun_sig = tokens[i]
-        i += 1
-        fun_sig = fun_sig[1:]
-        nodes.append(CassNode(NodeType.FunSig, fun_sig))
-
-    while i < num_tokens:
-        node_type_label = tokens[i]
-        i += 1
-        node_type_str = node_type_label[0]
-        label = node_type_label[1:]
-        if node_type_str == 'I':
-            num_child = int(tokens[i])
-            i += 1
-            nodes.append(
-                CassNode(NodeType.Internal, label, [None] * num_child))
-        elif node_type_str == 'N':
-            node = CassNode(NodeType.NumLit, label)
-            nodes.append(node)
-            leaf_nodes.append(node)
-        elif node_type_str == 'C':
-            node = CassNode(NodeType.CharLit, label)
-            nodes.append(node)
-            leaf_nodes.append(node)
-        elif node_type_str == 'S':
-            node = CassNode(NodeType.StringLit, label)
-            nodes.append(node)
-            leaf_nodes.append(node)
-        elif node_type_str == 'V':
-            node = CassNode(NodeType.GlobalVar, label)
-            nodes.append(node)
-            leaf_nodes.append(node)
-        elif node_type_str == 'F':
-            node = CassNode(NodeType.GlobalFun, label)
-            nodes.append(node)
-            leaf_nodes.append(node)
-        elif node_type_str == 'v':
-            prev_use = int(tokens[i])
-            next_use = int(tokens[i + 1])
-            i += 2
-            node = CassNode(NodeType.LocalVar, label)
-            node.prev_use = prev_use
-            node.next_use = next_use
-            nodes.append(node)
-            leaf_nodes.append(node)
-        elif node_type_str == 'f':
-            prev_use = int(tokens[i])
-            next_use = int(tokens[i + 1])
-            i += 2
-            node = CassNode(NodeType.LocalFun, label)
-            node.prev_use = prev_use
-            node.next_use = next_use
-            nodes.append(node)
-            leaf_nodes.append(node)
-        elif node_type_str == 'E':
-            node = CassNode(NodeType.Error)
-            nodes.append(node)
-            leaf_nodes.append(node)
-        else:
-            raise Exception()
-
-    assert num_nodes == len(nodes)
-
-    for n in nodes:
-        if n.node_type == NodeType.LocalVar or n.node_type == NodeType.LocalFun:
-            if n.prev_use >= 0:
-                n.prev_use = nodes[n.prev_use]
-            else:
-                n.prev_use = None
-            if n.next_use >= 0:
-                n.next_use = nodes[n.next_use]
-            else:
-                n.next_use = None
-
-    if has_fun_sig:
-        tree_start = 1
-    else:
-        tree_start = 0
-
-    root, rem_nodes = build_tree_rec(nodes[tree_start:])
-
-    assert root == nodes[tree_start]
-    assert len(rem_nodes) == 0
-
-    return CassTree(nodes, leaf_nodes)
-
-
-def build_tree_rec(nodes):
-    node = nodes[0]
-    nodes = nodes[1:]
-    for i in range(len(node.children)):
-        child, nodes = build_tree_rec(nodes)
-        child.parent = node
-        child.child_id = i
-        node.children[i] = child
-    return node, nodes
