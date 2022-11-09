@@ -1,4 +1,4 @@
-# Unsupervised learning of code embeddings using graph autoencoders
+# Unsupervised constrastive learning of code embeddings
 Final project for Stanford's CS329M (Machine Programming).
 
 ## Data
