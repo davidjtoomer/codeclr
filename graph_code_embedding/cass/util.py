@@ -5,6 +5,7 @@ import torch
 from .cass import CassConfig, CassNode, CassTree, NodeType
 from .. import DenseGraph
 
+
 def load_file(file_name, config: CassConfig = None):
     casses = []
     with open(file_name) as f:
@@ -49,7 +50,12 @@ def deserialize_from_tokens(tokens, config: CassConfig = None):
             num_child = int(tokens[i])
             i += 1
             nodes.append(
-                CassNode(NodeType.Internal, label, [None] * num_child, config=config))
+                CassNode(
+                    NodeType.Internal,
+                    label,
+                    [None] *
+                    num_child,
+                    config=config))
         elif node_type_str == 'N':
             node = CassNode(NodeType.NumLit, label, config=config)
             nodes.append(node)
@@ -132,14 +138,17 @@ def build_tree_rec(nodes):
     return node, nodes
 
 
-def cass_tree_to_graph(cass_trees: List[CassTree], vocabulary = None) -> DenseGraph:
+def cass_tree_to_graph(
+        cass_trees: List[CassTree],
+        vocabulary=None) -> DenseGraph:
     nodes = []
     [nodes.extend(cass_tree.nodes) for cass_tree in cass_trees]
     num_nodes = len(nodes)
     for i, node in enumerate(nodes):
         node.set_id(i)
-    
-    node_features = torch.zeros(num_nodes) # TODO: make this N x 2, add feature after making a vocabulary
+
+    # TODO: make this N x 2, add feature after making a vocabulary
+    node_features = torch.zeros(num_nodes)
     adjacency_matrix = torch.zeros(num_nodes, num_nodes)
     for node in nodes:
         node_features[node.id] = node.node_type.value[0]
@@ -147,4 +156,6 @@ def cass_tree_to_graph(cass_trees: List[CassTree], vocabulary = None) -> DenseGr
         for child in node.children:
             adjacency_matrix[i, child.id] = 1
             adjacency_matrix[child.id, i] = 1
-    return DenseGraph(node_features=node_features, adjacency_matrix=adjacency_matrix)
+    return DenseGraph(
+        node_features=node_features,
+        adjacency_matrix=adjacency_matrix)

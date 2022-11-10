@@ -8,13 +8,33 @@ import tarfile
 import tqdm
 
 
-logging.basicConfig(format='[%(asctime)s] %(pathname)s:%(lineno)d %(levelname)s - %(message)s', level=logging.INFO)
+logging.basicConfig(
+    format='[%(asctime)s] %(pathname)s:%(lineno)d %(levelname)s - %(message)s',
+    level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--benchmark', type=int, default=[1000], nargs='+', choices=[1000, 1400], help='The benchmark number.')
-parser.add_argument('--data_dir', type=str, default='data', help='The directory in which to download the data.')
-parser.add_argument('--data_type', type=str, default=['code'], nargs='+', choices=['code', 'spts', 'cass'], help='The type of data to download. SPT = simplified parse tree, CASS = context-aware semantics structure.')
+parser.add_argument(
+    '--benchmark',
+    type=int,
+    default=[1000],
+    nargs='+',
+    choices=[
+        1000,
+        1400],
+    help='The benchmark number.')
+parser.add_argument('--data_dir', type=str, default='data',
+                    help='The directory in which to download the data.')
+parser.add_argument(
+    '--data_type',
+    type=str,
+    default=['code'],
+    nargs='+',
+    choices=[
+        'code',
+        'spts',
+        'cass'],
+    help='The type of data to download. SPT = simplified parse tree, CASS = context-aware semantics structure.')
 args = parser.parse_args()
 
 # Create or clear the data directory
@@ -25,7 +45,13 @@ os.makedirs(args.data_dir)
 
 # Download tar archive to local disk
 DATA_ENDPOINT = f'https://dax-cdn.cdn.appdomain.cloud/dax-project-codenet/1.0.0/'
-get_filename = lambda benchmark, data_type: f'Project_CodeNet_C++{benchmark}{"" if data_type == "code" else "_" + data_type}.tar.gz'
+
+
+def get_filename(
+    benchmark,
+    data_type): return f'Project_CodeNet_C++{benchmark}{"" if data_type == "code" else "_" + data_type}.tar.gz'
+
+
 for benchmark in args.benchmark:
     for data_type in args.data_type:
         file_name = get_filename(benchmark, data_type)
@@ -36,7 +62,8 @@ for benchmark in args.benchmark:
         r = requests.get(url, stream=True)
         if r.status_code == 200:
             file_size = int(r.headers.get('Content-Length', 0))
-            progress_bar = tqdm.tqdm(total=file_size, unit='B', unit_scale=True)
+            progress_bar = tqdm.tqdm(
+                total=file_size, unit='B', unit_scale=True)
             with open(file_path, 'wb') as f:
                 for chunk in r.iter_content(chunk_size=1024):
                     if chunk:
@@ -46,7 +73,9 @@ for benchmark in args.benchmark:
             logger.info(f'Downloaded {url} to {file_path}.')
             logger.info(f'Extracting {file_name}...')
             with tarfile.open(file_path) as tf:
-                for member in tqdm.tqdm(iterable=tf.getmembers(), total=len(tf.getmembers()), leave=False):
+                for member in tqdm.tqdm(
+                    iterable=tf.getmembers(), total=len(
+                        tf.getmembers()), leave=False):
                     tf.extract(member, path=args.data_dir)
             logger.info(f'Extracted {file_name}.')
             os.remove(file_path)
