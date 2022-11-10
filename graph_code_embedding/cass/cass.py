@@ -35,7 +35,13 @@ class NodeType(Enum):
 
 
 class CassConfig:
-    def __init__(self, annot_mode: int = 0, compound_mode: int = 0, gvar_mode: int = 0, gfun_mode: int = 0, fsig_mode: int = 0):
+    def __init__(
+            self,
+            annot_mode: int = 0,
+            compound_mode: int = 0,
+            gvar_mode: int = 0,
+            gfun_mode: int = 0,
+            fsig_mode: int = 0):
         self.annot_mode = annot_mode
         self.compound_mode = compound_mode
         self.gfun_mode = gfun_mode
@@ -48,7 +54,12 @@ class CassConfig:
 
 
 class CassNode:
-    def __init__(self, node_type: NodeType, label: str = '', children: List = [], config: CassConfig = None):
+    def __init__(
+            self,
+            node_type: NodeType,
+            label: str = '',
+            children: List = [],
+            config: CassConfig = None):
         self.node_type = node_type
         self.children = children
         self.prev_use = None

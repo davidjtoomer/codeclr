@@ -2,8 +2,10 @@ from typing import List
 
 import torch
 
+
 class DenseGraph:
-    def __init__(self, node_features: torch.Tensor, adjacency_matrix: torch.Tensor) -> None:
+    def __init__(self, node_features: torch.Tensor,
+                 adjacency_matrix: torch.Tensor) -> None:
         self.node_features = node_features
         self.adjacency_matrix = adjacency_matrix
 
@@ -16,9 +18,12 @@ class DenseGraph:
         return self.adjacency_matrix.sum().item() / 2
 
     def save(self, path: str) -> None:
-        torch.save({'node_features': self.node_features, 'adjacency_matrix': self.adjacency_matrix}, path)
+        torch.save({'node_features': self.node_features,
+                    'adjacency_matrix': self.adjacency_matrix}, path)
 
     @staticmethod
     def load(path: str) -> 'DenseGraph':
         data = torch.load(path)
-        return DenseGraph(node_features=data['node_features'], adjacency_matrix=data['adjacency_matrix'])
+        return DenseGraph(
+            node_features=data['node_features'],
+            adjacency_matrix=data['adjacency_matrix'])
