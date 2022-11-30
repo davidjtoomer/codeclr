@@ -147,12 +147,11 @@ def cass_tree_to_graph(
     for i, node in enumerate(nodes):
         node.set_id(i)
 
-    # TODO: make this N x 2, add feature after making a vocabulary
-    node_features = torch.zeros(num_nodes)
+    node_features = torch.zeros(num_nodes, 2)
     adjacency_matrix = torch.zeros(num_nodes, num_nodes)
     for node in nodes:
-        node_features[node.id] = node.node_type.value[0]
-        # node_features[i, 1] = vocabulary[node.n]
+        node_features[node.id, 0] = node.node_type.value[0]
+        node_features[node.id, 1] = vocabulary[node.n]
         for child in node.children:
             adjacency_matrix[i, child.id] = 1
             adjacency_matrix[child.id, i] = 1
