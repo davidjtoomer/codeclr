@@ -2,30 +2,43 @@ name: graph-code-embedding
 channels:
   - pyg
   - pytorch
-  - conda-forge
   - anaconda
+  - conda-forge
   - defaults
 dependencies:
+  - absl-py=1.3.0=pyhd8ed1ab_0
+  - aiohttp=3.8.3=py38hef030d1_1
+  - aiosignal=1.3.1=pyhd8ed1ab_0
+  - async-timeout=4.0.2=py38hecd8cb5_0
   - attrs=21.4.0=pyhd3eb1b0_0
   - autopep8=1.6.0=pyhd3eb1b0_1
   - blas=1.0=mkl
+  - blinker=1.5=pyhd8ed1ab_0
   - brotlipy=0.7.0=py38h9ed2024_1003
   - bzip2=1.0.8=h1de35cc_0
+  - c-ares=1.18.1=h0d85af4_0
   - ca-certificates=2022.9.24=h033912b_0
+  - cachetools=5.2.0=pyhd8ed1ab_0
   - certifi=2022.9.24=pyhd8ed1ab_0
   - cffi=1.15.0=py38hc55c11b_1
   - charset-normalizer=2.0.4=pyhd3eb1b0_0
+  - click=8.1.3=unix_pyhd8ed1ab_2
   - colorama=0.4.6=pyhd8ed1ab_0
   - cryptography=37.0.1=py38hf6deb26_0
   - ffmpeg=4.3=h0a44026_0
   - fftw=3.3.9=h9ed2024_1
   - freetype=2.12.1=hd8bbffd_0
+  - frozenlist=1.3.3=py38hef030d1_0
   - gettext=0.21.0=h7535e17_0
   - giflib=5.2.1=haf1e3a3_0
   - gmp=6.2.1=he9d5cce_3
   - gnutls=3.6.15=hed9c0bf_0
+  - google-auth=2.14.1=pyh1a96a4e_0
+  - google-auth-oauthlib=0.4.6=pyhd8ed1ab_0
+  - grpcio=1.42.0=py38ha29bfda_0
   - icu=58.2=h0a44026_3
   - idna=3.3=pyhd3eb1b0_0
+  - importlib-metadata=5.1.0=pyha770c72_0
   - iniconfig=1.1.1=pyhd3eb1b0_0
   - intel-openmp=2021.4.0=hecd8cb5_3538
   - jinja2=3.1.2=py38hecd8cb5_0
@@ -42,6 +55,7 @@ dependencies:
   - libiconv=1.16=hca72f7f_2
   - libidn2=2.3.2=h9ed2024_0
   - libpng=1.6.37=ha441bb4_0
+  - libprotobuf=3.15.8=hcf210ce_1
   - libtasn1=4.16.0=h9ed2024_0
   - libtiff=4.4.0=h2ef1027_1
   - libunistring=0.9.10=h9ed2024_0
@@ -50,41 +64,55 @@ dependencies:
   - libxml2=2.9.14=hbf8cd5e_0
   - llvm-openmp=14.0.6=h0dcd299_0
   - lz4-c=1.9.3=h23ab428_1
+  - markdown=3.4.1=pyhd8ed1ab_0
   - markupsafe=2.1.1=py38hca72f7f_0
   - mkl=2021.4.0=hecd8cb5_637
   - mkl-service=2.4.0=py38h9ed2024_0
   - mkl_fft=1.3.1=py38h4ab4a9b_0
   - mkl_random=1.2.2=py38hb2f4e1b_0
+  - multidict=6.0.2=py38hef030d1_2
   - ncurses=6.3=hca72f7f_3
   - nettle=3.7.3=h230ac6f_1
   - numpy=1.23.3=py38hce7a837_1
   - numpy-base=1.23.3=py38heddfccc_1
+  - oauthlib=3.2.2=pyhd8ed1ab_0
   - openh264=2.1.1=h8346a28_0
   - openssl=1.1.1s=hfd90126_0
   - packaging=21.3=pyhd3eb1b0_0
   - pillow=9.2.0=py38hde71d04_1
   - pip=22.2.2=py38hecd8cb5_0
   - pluggy=1.0.0=py38hecd8cb5_1
+  - protobuf=3.15.8=py38ha048514_0
   - py=1.11.0=pyhd3eb1b0_0
+  - pyasn1=0.4.8=py_0
+  - pyasn1-modules=0.2.7=py_0
   - pycodestyle=2.8.0=pyhd3eb1b0_0
   - pycparser=2.21=pyhd3eb1b0_0
   - pyg=2.1.0=py38_torch_1.13.0_cpu
+  - pyjwt=2.6.0=pyhd8ed1ab_0
   - pyopenssl=22.0.0=pyhd3eb1b0_0
   - pyparsing=3.0.4=pyhd3eb1b0_0
   - pysocks=1.7.1=py38_1
   - pytest=7.1.2=py38hecd8cb5_0
   - python=3.8.13=hdfd78df_1
+  - python_abi=3.8=2_cp38
   - pytorch=1.13.0=py3.8_0
   - pytorch-cluster=1.6.0=py38_torch_1.13.0_cpu
   - pytorch-scatter=2.1.0=py38_torch_1.13.0_cpu
   - pytorch-sparse=0.6.15=py38_torch_1.13.0_cpu
+  - pyu2f=0.1.5=pyhd8ed1ab_0
   - readline=8.2=hca72f7f_0
   - requests=2.27.1=pyhd3eb1b0_0
+  - requests-oauthlib=1.3.1=pyhd8ed1ab_0
+  - rsa=4.9=pyhd8ed1ab_0
   - scikit-learn=1.1.3=py38he9d5cce_0
   - scipy=1.9.3=py38h3d31255_0
   - setuptools=65.5.0=py38hecd8cb5_0
   - six=1.16.0=pyhd3eb1b0_1
   - sqlite=3.39.3=h707629a_0
+  - tensorboard=2.11.0=pyhd8ed1ab_0
+  - tensorboard-data-server=0.6.0=py38ha6c3189_3
+  - tensorboard-plugin-wit=1.8.1=pyhd8ed1ab_0
   - threadpoolctl=2.2.0=pyh0d69192_0
   - tk=8.6.12=h5d9f67b_0
   - toml=0.10.2=pyhd3eb1b0_0
@@ -96,7 +124,10 @@ dependencies:
   - tqdm=4.64.1=pyhd8ed1ab_0
   - typing_extensions=4.3.0=py38hecd8cb5_0
   - urllib3=1.26.9=py38hecd8cb5_0
+  - werkzeug=2.2.2=pyhd8ed1ab_0
   - wheel=0.37.1=pyhd3eb1b0_0
   - xz=5.2.6=hca72f7f_0
+  - yarl=1.8.1=py38hef030d1_0
+  - zipp=3.11.0=pyhd8ed1ab_0
   - zlib=1.2.13=h4dc903c_0
   - zstd=1.5.2=hcb37349_0
