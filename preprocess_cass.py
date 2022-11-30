@@ -92,7 +92,7 @@ if not os.path.exists(args.data_dir):
 
 
 def yield_tokens(file_path: str, config: CassConfig = None):
-    for directory in tqdm.tqdm(os.listdir(file_path)):
+    for directory in tqdm.tqdm(os.listdir(file_path), leave=False):
         if os.path.isdir(os.path.join(file_path, directory)):
             for file in os.listdir(os.path.join(file_path, directory)):
                 cass_trees = load_file(
