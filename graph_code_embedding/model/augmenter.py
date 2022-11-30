@@ -7,6 +7,7 @@ from .. import DenseGraph
 
 class Augmenter(torch.nn.Module):
     def __init__(self, mask_frac: float = 0.25):
+        super().__init__()
         self.mask_frac = mask_frac
 
     def forward(self, graphs: List[DenseGraph]):
