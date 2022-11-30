@@ -6,6 +6,7 @@ channels:
   - defaults
 dependencies:
   - attrs=21.4.0=pyhd3eb1b0_0
+  - autopep8=1.6.0=pyhd3eb1b0_1
   - blas=1.0=mkl
   - brotlipy=0.7.0=py38h9ed2024_1003
   - bzip2=1.0.8=h1de35cc_0
@@ -58,6 +59,7 @@ dependencies:
   - pip=22.2.2=py38hecd8cb5_0
   - pluggy=1.0.0=py38hecd8cb5_1
   - py=1.11.0=pyhd3eb1b0_0
+  - pycodestyle=2.8.0=pyhd3eb1b0_0
   - pycparser=2.21=pyhd3eb1b0_0
   - pyopenssl=22.0.0=pyhd3eb1b0_0
   - pyparsing=3.0.4=pyhd3eb1b0_0
@@ -71,8 +73,10 @@ dependencies:
   - six=1.16.0=pyhd3eb1b0_1
   - sqlite=3.39.3=h707629a_0
   - tk=8.6.12=h5d9f67b_0
+  - toml=0.10.2=pyhd3eb1b0_0
   - tomli=1.2.2=pyhd3eb1b0_0
   - torchaudio=0.13.0=py38_cpu
+  - torchtext=0.14.0=py38
   - torchvision=0.14.0=py38_cpu
   - tqdm=4.64.1=pyhd8ed1ab_0
   - typing_extensions=4.3.0=py38hecd8cb5_0
@@ -81,4 +85,3 @@ dependencies:
   - xz=5.2.6=hca72f7f_0
   - zlib=1.2.13=h4dc903c_0
   - zstd=1.5.2=hcb37349_0
-prefix: /opt/miniconda3/envs/graph-code-embedding
