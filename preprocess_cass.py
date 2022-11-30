@@ -116,9 +116,13 @@ for benchmark in args.benchmark:
                                 os.path.join(
                                     DATA_DIR,
                                     directory)):
-                                OUTPUT_DIR = os.path.join(
+                                OUTPUT_DIR_ALL = os.path.join(
+                                    args.output_dir, DIRECTORY_NAME, config.tag, 'all')
+                                OUTPUT_DIR_SORTED = os.path.join(
                                     args.output_dir, DIRECTORY_NAME, config.tag, directory)
-                                os.makedirs(OUTPUT_DIR, exist_ok=True)
+                                os.makedirs(OUTPUT_DIR_ALL, exist_ok=True)
+                                os.makedirs(OUTPUT_DIR_SORTED, exist_ok=True)
+
                                 for filename in os.listdir(
                                         os.path.join(DATA_DIR, directory)):
                                     if filename.endswith('.cas'):
@@ -128,5 +132,7 @@ for benchmark in args.benchmark:
                                             cass_trees)
                                         dense_graph.save(
                                             os.path.join(
-                                                OUTPUT_DIR, filename.replace(
+                                                OUTPUT_DIR_SORTED, filename.replace(
                                                     '.cas', '.pt')))
+                                        dense_graph.save(os.path.join(
+                                            OUTPUT_DIR_ALL, f'{directory}_{filename.replace(".cas", ".pt")}'))
