@@ -48,6 +48,10 @@ class CassConfig:
         self.gvar_mode = gvar_mode
         self.fsig_mode = fsig_mode
 
+    @property
+    def tag(self):
+        return f'annot_mode={self.annot_mode}_compound_mode={self.compound_mode}_gfun_mode={self.gfun_mode}_gvar_mode={self.gvar_mode}_fsig_mode={self.fsig_mode}'
+
 
 class CassNode:
     def __init__(

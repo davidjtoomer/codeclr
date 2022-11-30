@@ -1,10 +1,10 @@
 import argparse
 import logging
 import os
-import requests
 import shutil
 import tarfile
 
+import requests
 import tqdm
 
 

@@ -2,6 +2,8 @@ import argparse
 import logging
 import os
 
+import torch
+from torchtext.vocab import build_vocab_from_iterator
 import tqdm
 
 from graph_code_embedding.cass import CassConfig, cass_tree_to_graph, load_file
@@ -88,6 +90,19 @@ if not os.path.exists(args.data_dir):
     logger.error(f'Data directory {args.data_dir} does not exist.')
     exit(1)
 
+
+def yield_tokens(file_path: str, config: CassConfig = None):
+    for directory in tqdm.tqdm(os.listdir(file_path)):
+        if os.path.isdir(os.path.join(file_path, directory)):
+            for file in os.listdir(os.path.join(file_path, directory)):
+                cass_trees = load_file(
+                    os.path.join(file_path, directory, file), config=config)
+                nodes = []
+                [nodes.extend(cass_tree.nodes) for cass_tree in cass_trees]
+                for node in nodes:
+                    yield node.n
+
+
 for benchmark in args.benchmark:
     DIRECTORY_NAME = f'Project_CodeNet_C++{benchmark}'
     DATA_DIR = os.path.join(args.data_dir, DIRECTORY_NAME, 'cass')
@@ -107,26 +122,45 @@ for benchmark in args.benchmark:
                             gfun_mode=gfun_mode,
                             gvar_mode=gvar_mode,
                             fsig_mode=fsig_mode)
-                        tag = f'annot_mode={annot_mode}_compound_mode={compound_mode}_gfun_mode={gfun_mode}_gvar_mode={gvar_mode}_fsig_mode={fsig_mode}'
+                        logger.info(
+                            f'Preprocessing {benchmark} with {config.tag}...')
+                        PREPROCESSED_DIR = os.path.join(
+                            args.output_dir, DIRECTORY_NAME, config.tag)
+                        os.makedirs(PREPROCESSED_DIR, exist_ok=True)
 
-                        logger.info(f'Preprocessing {benchmark} with {tag}...')
+                        logger.info(f'Generating vocabulary...')
+                        vocab = build_vocab_from_iterator(
+                            yield_tokens(DATA_DIR, config), specials=['<unk>'])
+                        vocab.set_default_index(vocab['<unk>'])
+                        logger.info(f'Vocabulary size: {len(vocab)}')
+                        torch.save(vocab, os.path.join(
+                            PREPROCESSED_DIR, 'vocab.pt'))
+
                         for directory in tqdm.tqdm(
                                 os.listdir(DATA_DIR), leave=False):
                             if os.path.isdir(
                                 os.path.join(
                                     DATA_DIR,
                                     directory)):
-                                OUTPUT_DIR = os.path.join(
-                                    args.output_dir, DIRECTORY_NAME, tag, directory)
-                                os.makedirs(OUTPUT_DIR, exist_ok=True)
+                                OUTPUT_DIR_ALL = os.path.join(
+                                    PREPROCESSED_DIR, 'all')
+                                OUTPUT_DIR_SORTED = os.path.join(
+                                    PREPROCESSED_DIR, directory)
+                                os.makedirs(OUTPUT_DIR_ALL, exist_ok=True)
+                                os.makedirs(OUTPUT_DIR_SORTED, exist_ok=True)
+
                                 for filename in os.listdir(
                                         os.path.join(DATA_DIR, directory)):
                                     if filename.endswith('.cas'):
                                         cass_trees = load_file(os.path.join(
                                             DATA_DIR, directory, filename), config)
                                         dense_graph = cass_tree_to_graph(
-                                            cass_trees)
+                                            cass_trees, vocabulary=vocab)
                                         dense_graph.save(
                                             os.path.join(
-                                                OUTPUT_DIR, filename.replace(
+                                                OUTPUT_DIR_SORTED, filename.replace(
                                                     '.cas', '.pt')))
+                                        dense_graph.save(
+                                            os.path.join(
+                                                OUTPUT_DIR_ALL,
+                                                f'{directory}_{filename.replace(".cas", ".pt")}'))
