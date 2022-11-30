@@ -4,7 +4,6 @@ import random
 import torch
 
 from .. import DenseGraph
-from ..cass import CassConfig
 
 
 class GraphDataset(torch.utils.data.Dataset):
