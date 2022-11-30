@@ -160,5 +160,7 @@ for benchmark in args.benchmark:
                                             os.path.join(
                                                 OUTPUT_DIR_SORTED, filename.replace(
                                                     '.cas', '.pt')))
-                                        dense_graph.save(os.path.join(
-                                            OUTPUT_DIR_ALL, f'{directory}_{filename.replace(".cas", ".pt")}'))
+                                        dense_graph.save(
+                                            os.path.join(
+                                                OUTPUT_DIR_ALL,
+                                                f'{directory}_{filename.replace(".cas", ".pt")}'))
