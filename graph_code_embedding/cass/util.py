@@ -159,6 +159,7 @@ def cass_tree_to_graph(
         for child in node.children:
             adjacency_matrix[node.id, child.id] = 1
             adjacency_matrix[child.id, node.id] = 1
+        adjacency_matrix[node.id, node.id] = 1
     return DenseGraph(
         node_features=node_features,
         adjacency_matrix=adjacency_matrix)
