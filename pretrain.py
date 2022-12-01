@@ -28,10 +28,10 @@ parser.add_argument('--save_interval', type=int, default=1,
 parser.add_argument('--num_epochs', type=int, default=100,
                     help='The number of epochs for which to train.')
 parser.add_argument('--batch_size', type=int,
-                    default=128, help='The batch size.')
+                    default=64, help='The batch size.')
 parser.add_argument('--train_frac', type=float, default=0.6,
                     help='The fraction of the data to use for training.')
-parser.add_argument('--lr', type=float, default=0.01,
+parser.add_argument('--lr', type=float, default=0.001,
                     help='The learning rate.')
 parser.add_argument(
     '--mask_frac',
