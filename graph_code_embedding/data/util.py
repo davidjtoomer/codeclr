@@ -17,7 +17,6 @@ def train_val_test_split(
     n = len(dataset)
     train_size = int(train_frac * n)
     val_size = (n - train_size) // 2
-    test_size = n - train_size - val_size
 
     train_indices = range(train_size)
     val_indices = range(train_size, train_size + val_size)
