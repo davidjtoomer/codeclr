@@ -17,8 +17,8 @@ class Augmenter(torch.nn.Module):
             num_nodes = graph.num_nodes
             adj = graph.adjacency_matrix
 
-            anchor_mask = torch.rand(num_nodes) < self.mask_frac
-            pos_mask = torch.rand(num_nodes) < self.mask_frac
+            anchor_mask = torch.rand(num_nodes) > self.mask_frac
+            pos_mask = torch.rand(num_nodes) > self.mask_frac
 
             anchor_adj = anchor_mask.unsqueeze(
                 0) * anchor_mask.unsqueeze(1) * adj
