@@ -33,8 +33,11 @@ parser.add_argument('--train_frac', type=float, default=0.6,
                     help='The fraction of the data to use for training.')
 parser.add_argument('--lr', type=float, default=0.01,
                     help='The learning rate.')
-parser.add_argument('--mask_frac', type=float, default=0.25,
-                    help='The fraction of nodes to mask for data augmentation.')
+parser.add_argument(
+    '--mask_frac',
+    type=float,
+    default=0.25,
+    help='The fraction of nodes to mask for data augmentation.')
 # CASS configuration
 parser.add_argument(
     '--annot_mode',

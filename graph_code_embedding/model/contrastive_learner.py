@@ -9,7 +9,11 @@ from .. import DenseGraph
 
 
 class ContrastiveLearner(torch.nn.Module):
-    def __init__(self, layer_sizes: List[int], vocab_size: int = 1000, mask_frac: float = 0.25):
+    def __init__(
+            self,
+            layer_sizes: List[int],
+            vocab_size: int = 1000,
+            mask_frac: float = 0.25):
         super().__init__()
         self.layer_sizes = layer_sizes
         self.vocab_size = vocab_size

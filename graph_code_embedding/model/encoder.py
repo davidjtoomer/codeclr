@@ -8,7 +8,11 @@ from ..cass.cass import NodeType
 
 
 class Encoder(torch.nn.Module):
-    def __init__(self, layer_sizes: List[int], vocab_size: int = 1000, activation=torch.relu):
+    def __init__(
+            self,
+            layer_sizes: List[int],
+            vocab_size: int = 1000,
+            activation=torch.relu):
         super().__init__()
         self.layer_sizes = layer_sizes
         self.vocab_size = vocab_size
