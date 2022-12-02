@@ -69,6 +69,10 @@ parser.add_argument(
     default=1,
     choices=[0, 1],
     help='CASS configuration: function I/O cardinality. 0: No change. 1: Include the input and output cardinality per function in GAT.')
+parser.add_argument('--augment_1', type=str, default='node_drop', choices=[
+                    'identity', 'node_drop', 'node_mask'], help='The first data augmentation method.')
+parser.add_argument('--augment_2', type=str, default='node_drop', choices=[
+                    'identity', 'node_drop', 'node_mask'], help='The second data augmentation method.')
 args = parser.parse_args()
 
 config = CassConfig(
@@ -78,7 +82,7 @@ config = CassConfig(
     gvar_mode=args.gvar_mode,
     fsig_mode=args.fsig_mode)
 
-parameter_tag = f'{config.tag}_mask_frac={args.mask_frac}_batch_size={args.batch_size}_lr={args.lr}'
+parameter_tag = f'augment_1={args.augment_1}_augment_2={args.augment_2}_mask_frac={args.mask_frac}_batch_size={args.batch_size}_lr={args.lr}_{config.tag}'
 LOG_DIR = os.path.join(args.log_dir, parameter_tag)
 os.makedirs(LOG_DIR, exist_ok=True)
 writer = tensorboard.SummaryWriter(LOG_DIR)
@@ -109,14 +113,20 @@ VOCAB_FILE = os.path.join(
 if os.path.exists(VOCAB_FILE):
     logger.info(f'Loading vocabulary from {VOCAB_FILE}')
     vocab = torch.load(VOCAB_FILE)
-    vocab_size = len(vocab)
+    vocab.append_token('<MASK>')
+    mask_idx = vocab['<MASK>']
 else:
-    logger.info('No vocabulary found. Using default embedding size of 1000.')
-    vocab_size = 1000
+    logger.error(f'No vocabulary found at {VOCAB_FILE}')
+    exit(1)
 
 gcn_layers = [128, 128, 64, 32]
 model = ContrastiveLearner(
-    gcn_layers, vocab_size=vocab_size, mask_frac=args.mask_frac)
+    gcn_layers,
+    len(vocab),
+    mask_frac=args.mask_frac,
+    mask_idx=mask_idx,
+    augment_1=args.augment_1,
+    augment_2=args.augment_2)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
 
