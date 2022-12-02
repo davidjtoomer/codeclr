@@ -155,7 +155,7 @@ def cass_tree_to_graph(
         if node.n:
             node_features[node.id, 1] = vocabulary[node.n]
         else:
-            node_features[node.id, 1] = vocabulary.get_default_index()
+            node_features[node.id, 1] = vocabulary['']
         for child in node.children:
             adjacency_matrix[node.id, child.id] = 1
             adjacency_matrix[child.id, node.id] = 1

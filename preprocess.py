@@ -79,8 +79,7 @@ def yield_tokens(file_path: str, config: CassConfig = None):
                     os.path.join(file_path, directory, file), config=config)
                 nodes = []
                 [nodes.extend(cass_tree.nodes) for cass_tree in cass_trees]
-                for node in nodes:
-                    yield node.n
+                yield [node.n if node.n else '' for node in nodes]
 
 
 for benchmark in args.benchmark:
