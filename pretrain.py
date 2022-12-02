@@ -69,10 +69,24 @@ parser.add_argument(
     default=1,
     choices=[0, 1],
     help='CASS configuration: function I/O cardinality. 0: No change. 1: Include the input and output cardinality per function in GAT.')
-parser.add_argument('--augment_1', type=str, default='node_drop', choices=[
-                    'identity', 'node_drop', 'node_mask'], help='The first data augmentation method.')
-parser.add_argument('--augment_2', type=str, default='node_drop', choices=[
-                    'identity', 'node_drop', 'node_mask'], help='The second data augmentation method.')
+parser.add_argument(
+    '--augment_1',
+    type=str,
+    default='node_drop',
+    choices=[
+        'identity',
+        'node_drop',
+        'node_mask'],
+    help='The first data augmentation method.')
+parser.add_argument(
+    '--augment_2',
+    type=str,
+    default='node_drop',
+    choices=[
+        'identity',
+        'node_drop',
+        'node_mask'],
+    help='The second data augmentation method.')
 args = parser.parse_args()
 
 config = CassConfig(
