@@ -41,7 +41,7 @@ class Encoder(torch.nn.Module):
             x = torch.cat([self.node_type_embedding(x[:, 0]),
                            self.node_label_embedding(x[:, 1])], dim=-1)
             for layer in self.layers:
-                x = layer(x, adj)
+                x = layer(x, adj, add_loop=False)
                 x = self.activation(x)
             x = x.squeeze(0)
             pooled = torch.cat([x.mean(dim=0), x.max(dim=0)[0]], dim=-1)
