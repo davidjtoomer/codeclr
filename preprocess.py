@@ -94,10 +94,10 @@ for benchmark in args.benchmark:
         annot_mode=args.annot_mode,
         compound_mode=args.compound_mode,
         gfun_mode=args.gfun_mode,
-        gvar_mode=args.gargs.var_mode,
+        gvar_mode=args.gvar_mode,
         fsig_mode=args.fsig_mode)
     logger.info(
-        f'Preprocessing {benchmark} with {config.tag}...')
+        f'Preprocessing C++{benchmark} with {config.tag}...')
     PREPROCESSED_DIR = os.path.join(
         args.output_dir, DIRECTORY_NAME, config.tag)
     os.makedirs(PREPROCESSED_DIR, exist_ok=True)
