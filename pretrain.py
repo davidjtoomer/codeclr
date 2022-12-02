@@ -25,7 +25,7 @@ parser.add_argument('--log_dir', type=str, default='logs',
                     help='The directory in which to store the logs.')
 parser.add_argument('--save_interval', type=int, default=1,
                     help='The number of epochs between saving the model.')
-parser.add_argument('--num_epochs', type=int, default=100,
+parser.add_argument('--num_epochs', type=int, default=1,
                     help='The number of epochs for which to train.')
 parser.add_argument('--batch_size', type=int,
                     default=64, help='The batch size.')
