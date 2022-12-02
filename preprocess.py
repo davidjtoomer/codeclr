@@ -79,8 +79,7 @@ def yield_tokens(file_path: str, config: CassConfig = None):
                     os.path.join(file_path, directory, file), config=config)
                 nodes = []
                 [nodes.extend(cass_tree.nodes) for cass_tree in cass_trees]
-                for node in nodes:
-                    yield node.n
+                yield [node.n if node.n else '' for node in nodes]
 
 
 for benchmark in args.benchmark:
@@ -95,10 +94,10 @@ for benchmark in args.benchmark:
         annot_mode=args.annot_mode,
         compound_mode=args.compound_mode,
         gfun_mode=args.gfun_mode,
-        gvar_mode=args.gargs.var_mode,
+        gvar_mode=args.gvar_mode,
         fsig_mode=args.fsig_mode)
     logger.info(
-        f'Preprocessing {benchmark} with {config.tag}...')
+        f'Preprocessing C++{benchmark} with {config.tag}...')
     PREPROCESSED_DIR = os.path.join(
         args.output_dir, DIRECTORY_NAME, config.tag)
     os.makedirs(PREPROCESSED_DIR, exist_ok=True)

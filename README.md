@@ -15,7 +15,7 @@ python download_data.py --data_type cass
 To convert the CASS data into DenseGraphs we can pass through our GNNs, run the following command:
 
 ```
-python preprocess_cass.py
+python preprocess.py
 ```
 
 This script defaults to treating CASS nodes using the configuration used by [MISIM](https://arxiv.org/abs/2006.05265) (2-1-3-1-1). To learn more about other configurations, execute <code>python preprocess.py --help</code>.

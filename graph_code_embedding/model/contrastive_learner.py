@@ -12,14 +12,24 @@ class ContrastiveLearner(torch.nn.Module):
     def __init__(
             self,
             layer_sizes: List[int],
-            vocab_size: int = 1000,
-            mask_frac: float = 0.25):
+            vocab_size: int,
+            mask_frac: float = 0.25,
+            mask_idx: int = 0,
+            augment_1: str = 'node_drop',
+            augment_2: str = 'node_drop'):
         super().__init__()
         self.layer_sizes = layer_sizes
         self.vocab_size = vocab_size
         self.mask_frac = mask_frac
+        self.mask_idx = mask_idx
+        self.augment_1 = augment_1
+        self.augment_2 = augment_2
 
-        self.augmenter = Augmenter(self.mask_frac)
+        self.augmenter = Augmenter(
+            mask_frac=self.mask_frac,
+            mask_idx=self.mask_idx,
+            augment_1=self.augment_1,
+            augment_2=self.augment_2)
         self.encoder = Encoder(layer_sizes, vocab_size=vocab_size)
 
     def forward(self, graphs: List[DenseGraph]):
