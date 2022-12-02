@@ -37,52 +37,32 @@ parser.add_argument(
 parser.add_argument(
     '--annot_mode',
     type=int,
-    default=[0],
-    nargs='+',
-    choices=[
-        0,
-        1,
-        2],
+    default=2,
+    choices=[0, 1, 2],
     help='CASS configuration: node prefix label. 0: No change. 1: Add a prefix to each internal nodel label. 2: Add a prefix to parenthesis node label.')
 parser.add_argument(
     '--compound_mode',
     type=int,
-    default=[0],
-    nargs='+',
-    choices=[
-        0,
-        1,
-        2],
+    default=1,
+    choices=[0, 1, 2],
     help='CASS configuration: compound statements. 0: No change. 1: Drop all features relevant to compound statements. 2: Replace with "{#}".')
 parser.add_argument(
     '--gfun_mode',
     type=int,
-    default=[0],
-    nargs='+',
-    choices=[
-        0,
-        1,
-        2],
+    default=1,
+    choices=[0, 1, 2],
     help='CASS configuration: global functions. 0: No change. 1: Drop all features relevant to global functions. 2: Drop function identifier and replace with "#EXFUNC".')
 parser.add_argument(
     '--gvar_mode',
     type=int,
-    default=[0],
-    nargs='+',
-    choices=[
-        0,
-        1,
-        2,
-        3],
+    default=3,
+    choices=[0, 1, 2, 3],
     help='CASS configuration: global variables. 0: No change. 1: Drop all features relevant to global variables. 2: Replace with "$GVAR". 3: Replace with "$VAR".')
 parser.add_argument(
     '--fsig_mode',
     type=int,
-    default=[0],
-    nargs='+',
-    choices=[
-        0,
-        1],
+    default=1,
+    choices=[0, 1],
     help='CASS configuration: function I/O cardinality. 0: No change. 1: Include the input and output cardinality per function in GAT.')
 args = parser.parse_args()
 
@@ -111,56 +91,51 @@ for benchmark in args.benchmark:
             f'Data directory {DATA_DIR} does not exist. Could not preprocess data for {benchmark}.')
         continue
 
-    for annot_mode in args.annot_mode:
-        for compound_mode in args.compound_mode:
-            for gfun_mode in args.gfun_mode:
-                for gvar_mode in args.gvar_mode:
-                    for fsig_mode in args.fsig_mode:
-                        config = CassConfig(
-                            annot_mode=annot_mode,
-                            compound_mode=compound_mode,
-                            gfun_mode=gfun_mode,
-                            gvar_mode=gvar_mode,
-                            fsig_mode=fsig_mode)
-                        logger.info(
-                            f'Preprocessing {benchmark} with {config.tag}...')
-                        PREPROCESSED_DIR = os.path.join(
-                            args.output_dir, DIRECTORY_NAME, config.tag)
-                        os.makedirs(PREPROCESSED_DIR, exist_ok=True)
+    config = CassConfig(
+        annot_mode=args.annot_mode,
+        compound_mode=args.compound_mode,
+        gfun_mode=args.gfun_mode,
+        gvar_mode=args.gargs.var_mode,
+        fsig_mode=args.fsig_mode)
+    logger.info(
+        f'Preprocessing {benchmark} with {config.tag}...')
+    PREPROCESSED_DIR = os.path.join(
+        args.output_dir, DIRECTORY_NAME, config.tag)
+    os.makedirs(PREPROCESSED_DIR, exist_ok=True)
 
-                        logger.info(f'Generating vocabulary...')
-                        vocab = build_vocab_from_iterator(
-                            yield_tokens(DATA_DIR, config), specials=['<unk>'])
-                        vocab.set_default_index(vocab['<unk>'])
-                        logger.info(f'Vocabulary size: {len(vocab)}')
-                        torch.save(vocab, os.path.join(
-                            PREPROCESSED_DIR, 'vocab.pt'))
+    logger.info(f'Generating vocabulary...')
+    vocab = build_vocab_from_iterator(
+        yield_tokens(DATA_DIR, config), specials=['<unk>'])
+    vocab.set_default_index(vocab['<unk>'])
+    logger.info(f'Vocabulary size: {len(vocab)}')
+    torch.save(vocab, os.path.join(
+        PREPROCESSED_DIR, 'vocab.pt'))
 
-                        for directory in tqdm.tqdm(
-                                os.listdir(DATA_DIR), leave=False):
-                            if os.path.isdir(
-                                os.path.join(
-                                    DATA_DIR,
-                                    directory)):
-                                OUTPUT_DIR_ALL = os.path.join(
-                                    PREPROCESSED_DIR, 'all')
-                                OUTPUT_DIR_SORTED = os.path.join(
-                                    PREPROCESSED_DIR, directory)
-                                os.makedirs(OUTPUT_DIR_ALL, exist_ok=True)
-                                os.makedirs(OUTPUT_DIR_SORTED, exist_ok=True)
+    for directory in tqdm.tqdm(
+            os.listdir(DATA_DIR), leave=False):
+        if os.path.isdir(
+            os.path.join(
+                DATA_DIR,
+                directory)):
+            OUTPUT_DIR_ALL = os.path.join(
+                PREPROCESSED_DIR, 'all')
+            OUTPUT_DIR_SORTED = os.path.join(
+                PREPROCESSED_DIR, directory)
+            os.makedirs(OUTPUT_DIR_ALL, exist_ok=True)
+            os.makedirs(OUTPUT_DIR_SORTED, exist_ok=True)
 
-                                for filename in os.listdir(
-                                        os.path.join(DATA_DIR, directory)):
-                                    if filename.endswith('.cas'):
-                                        cass_trees = load_file(os.path.join(
-                                            DATA_DIR, directory, filename), config)
-                                        dense_graph = cass_tree_to_graph(
-                                            cass_trees, vocabulary=vocab)
-                                        dense_graph.save(
-                                            os.path.join(
-                                                OUTPUT_DIR_SORTED, filename.replace(
-                                                    '.cas', '.pt')))
-                                        dense_graph.save(
-                                            os.path.join(
-                                                OUTPUT_DIR_ALL,
-                                                f'{directory}_{filename.replace(".cas", ".pt")}'))
+            for filename in os.listdir(
+                    os.path.join(DATA_DIR, directory)):
+                if filename.endswith('.cas'):
+                    cass_trees = load_file(os.path.join(
+                        DATA_DIR, directory, filename), config)
+                    dense_graph = cass_tree_to_graph(
+                        cass_trees, vocabulary=vocab)
+                    dense_graph.save(
+                        os.path.join(
+                            OUTPUT_DIR_SORTED, filename.replace(
+                                '.cas', '.pt')))
+                    dense_graph.save(
+                        os.path.join(
+                            OUTPUT_DIR_ALL,
+                            f'{directory}_{filename.replace(".cas", ".pt")}'))
