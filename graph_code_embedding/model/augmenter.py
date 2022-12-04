@@ -130,3 +130,5 @@ class SubtreeMasker(torch.nn.Module):
             node_features[:, 1][node_mask] = self.mask_idx
 
             augments.append(DenseGraph(node_features, graph.adjacency_matrix))
+
+        return augments
