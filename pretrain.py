@@ -76,7 +76,8 @@ parser.add_argument(
     choices=[
         'identity',
         'node_drop',
-        'node_mask'],
+        'node_mask',
+        'subtree_mask'],
     help='The first data augmentation method.')
 parser.add_argument(
     '--augment_2',
@@ -85,7 +86,8 @@ parser.add_argument(
     choices=[
         'identity',
         'node_drop',
-        'node_mask'],
+        'node_mask',
+        'subtree_mask'],
     help='The second data augmentation method.')
 args = parser.parse_args()
 
