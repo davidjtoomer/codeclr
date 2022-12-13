@@ -5,7 +5,7 @@ from statistics import mean, median
 
 import tqdm
 
-from graph_code_embedding.cass import load_file
+from codeclr.cass import load_file
 
 logging.basicConfig(
     format='[%(asctime)s] %(pathname)s:%(lineno)d %(levelname)s - %(message)s',

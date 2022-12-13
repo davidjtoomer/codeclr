@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from graph_code_embedding.cass import CassTree, load_file
+from codeclr.cass import CassTree, load_file
 
 
 def test_deserialize_file_one_cass_tree() -> None:

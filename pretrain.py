@@ -6,9 +6,9 @@ import numpy as np
 import torch
 from torch.utils import tensorboard
 
-from graph_code_embedding.cass import CassConfig
-from graph_code_embedding.data import train_val_test_split
-from graph_code_embedding.model import ContrastiveLearner
+from codeclr.cass import CassConfig
+from codeclr.data import train_val_test_split
+from codeclr.model import ContrastiveLearner
 
 
 logging.basicConfig(

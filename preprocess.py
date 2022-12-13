@@ -6,7 +6,7 @@ import torch
 from torchtext.vocab import build_vocab_from_iterator
 import tqdm
 
-from graph_code_embedding.cass import CassConfig, cass_tree_to_graph, load_file
+from codeclr.cass import CassConfig, cass_tree_to_graph, load_file
 
 logging.basicConfig(
     format='[%(asctime)s] %(pathname)s:%(lineno)d %(levelname)s - %(message)s',
